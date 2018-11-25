@@ -89,7 +89,7 @@ def arg_check():
         print("Don't forget to add the server name")
         exit(1)
 
-    elif sys.argv[2] < 0 or sys.argv[2] > 65535:
+    elif int(sys.argv[2]) < 0 or int(sys.argv[2]) > 65535:
         print("Port number is out of viable range, try again")
         exit(1)
     
