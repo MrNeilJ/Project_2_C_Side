@@ -24,7 +24,7 @@ void getUser(char *input) {
 
  Migrated the first  IF statement from Beej.us layout into a more modular layout
  */
-struct addrinfo *setAddressInfo(char *address, char *port) {
+struct addrinfo *setAddressInfo(char *port char* address = NULL) {
     struct addrinfo hints, *servinfo;
     int rv;
 
@@ -250,7 +250,7 @@ void sendingFile(char * address, char * port, char * filename){
    // struct addrinfo *res = setAddressInfo(argv[1], argv[2]);
 
     // Get the address information for the server.
-    struct addrinfo *res = setAddressInfo(address, port);
+    struct addrinfo *res = setAddressInfo(port, address);
 
     int sockfd = makeSocket(res);
 
@@ -305,7 +305,7 @@ void sendFullDirectory(char * address, char * port, char ** files, int numFiles)
     //struct addrinfo *res = setAddressInfo(argv[1], argv[2]);
 
     // Get the address information for the server.
-    struct addrinfo *res = setAddressInfo(address, port);
+    struct addrinfo *res = setAddressInfo(port, address);
 
     int sockfd = makeSocket(res);
 
@@ -402,7 +402,7 @@ void buildConnection(int new_fd){
 }
 
 void sendDirectory(char* address, char * port, char ** files, int numFiles) {
-    struct addrinfo * res = setAddressInfo(address, port);
+    struct addrinfo * res = setAddressInfo(port, address);
     int sockfd = makeSocket(res);
     connectSocket(sockfd, res);
 
@@ -440,7 +440,7 @@ int main(int argc, char *argv[]) {
     }
 
     // Get the address information for the server.
-    struct addrinfo *res = setAddressInfo(argv[1], argv[2]);
+    struct addrinfo *res = setAddressInfo(argv[1]);
 
     int sockfd = makeSocket(res);
 
