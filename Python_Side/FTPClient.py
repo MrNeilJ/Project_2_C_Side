@@ -122,16 +122,16 @@ def data_fetch(clientSocket):
     clientSocket.recv(1024)
 
     if sys.argv[3] == "-g":
-        clientSocket.send("g")
+        clientSocket.send("g".encode())
     elif sys.argv[3] == "-l":
-        clientSocket.send("l")
+        clientSocket.send("l".encode())
     else:
         print("Incorrect value sent somehow")
         exit(1)
 
     clientSocket.recv(1024)
 
-    clientSocket.send(get_ip())
+    clientSocket.send(get_ip().encode())
 
     response = clientSocket.recv(1024)
 
