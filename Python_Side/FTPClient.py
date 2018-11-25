@@ -70,13 +70,13 @@ def arg_check():
     if len(sys.argv) == 4 or len(sys.argv) == 5:
         print("Argument Supplied: {}".format(sys.argv[3]))
         if sys.argv[3] == "-l":
-            if sys.argv[4] < 0 or sys.argv[4] > 65535:
+            if int(sys.argv[4]) < 0 or int(sys.argv[4]) > 65535:
                 print("Data Port Number out of viable range, try again.")
                 exit(1)
             else:
                 totalArg = 4
         elif sys.argv[3] == "-g":
-            if sys.argv[5] < 0 or sys.argv[5] > 65535:
+            if int(sys.argv[5]) < 0 or int(sys.argv[5]) > 65535:
                 print("Data Port Number out of viable range, try again.")
                 exit(1)
             else:
