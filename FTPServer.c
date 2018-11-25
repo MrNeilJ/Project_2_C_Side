@@ -394,7 +394,7 @@ void buildConnection(int new_fd){
 
     else {
         send(new_fd, fail, strlen(fail), 0);
-        print("Did not understand request, make sure you use a g or l for this program");
+        fprintf(stderr, "Failure, try again.");
     }
 
 }
