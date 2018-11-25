@@ -280,7 +280,7 @@ void sendingFile(char * address, char * port, char * filename){
         // to keep track of how many bytes are left to write.
         void *p = buffer;
         while (bytes_read > 0) {
-            int bytes_written = write(output_socket, p, sizeof(buffer), 0);
+            int bytes_written = write(sockfd, p, sizeof(buffer), 0);
             if (bytes_written <= 0) {
                 // handle errors
                 fprintf(stderr, "Error reading information into buffer.");
