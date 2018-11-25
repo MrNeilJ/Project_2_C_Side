@@ -8,7 +8,7 @@
 #################################################
 
 from socket import *
-import socket
+#import socket
 import sys
 import os
 import time
@@ -19,7 +19,7 @@ def clear_terminal():
 
 
 def animate_connect(port_number):
-    print("Trying to connect on port {}".format(port_number), end="")
+    print("Trying to connect on port {}".format(port_number))
 
     for i in range(0, 5):
         time.sleep(1)
