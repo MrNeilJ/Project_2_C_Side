@@ -313,13 +313,13 @@ void sendFullDirectory(char * address, char * port, char ** files, int numFiles)
 
     int i ;
     for (i = 0; i < numFiles; i++){
-        send(dataSocket, files[i], 100 ,0);                 //Send for the total number of files
+        send(sockfd, files[i], 100 ,0);                 //Send for the total number of files
     }
 
     //char* completed = "done";
     //send(dataSocket, completed, strlen(completed), 0);
 
-    close(dataSocket);
+    close(sockfd);
     freeaddrinfo(res);
 }
 
