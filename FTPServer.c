@@ -358,7 +358,7 @@ void buildConnection(int new_fd){
         // Get all the current files in our directory
         char** fileSet = tempStringDirectory(500);
         int numFile = getDirectory(files);
-        int locateFile = fileSearch(files, numFile, filename);
+        int locateFile = fileSearch(fileSet, numFile, filename);
 
         if (locateFile) {
             char* found = "Found";
