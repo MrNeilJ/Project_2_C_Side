@@ -24,7 +24,7 @@ void getUser(char *input) {
 
  Migrated the first  IF statement from Beej.us layout into a more modular layout
  */
-struct addrinfo *setAddressInfo(char *port char* address = NULL) {
+struct addrinfo *setAddressInfo(char *address, char *port) {
     struct addrinfo hints, *servinfo;
     int rv;
 
@@ -34,6 +34,22 @@ struct addrinfo *setAddressInfo(char *port char* address = NULL) {
     hints.ai_flags = AI_PASSIVE;
 
     if ((rv = getaddrinfo(address, port, &hints, &servinfo)) != 0) {
+        fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(rv));
+        exit(1);
+    }
+    return servinfo;
+}
+
+struct addrinfo *setAddressInfoNoIP(char *port) {
+    struct addrinfo hints, *servinfo;
+    int rv;
+
+    memset(&hints, 0, sizeof(hints));
+    hints.ai_family = AF_INET;
+    hints.ai_socktype = SOCK_STREAM;
+    hints.ai_flags = AI_PASSIVE;
+
+    if ((rv = getaddrinfo(NULL, port, &hints, &servinfo)) != 0) {
         fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(rv));
         exit(1);
     }
@@ -250,7 +266,7 @@ void sendingFile(char * address, char * port, char * filename){
    // struct addrinfo *res = setAddressInfo(argv[1], argv[2]);
 
     // Get the address information for the server.
-    struct addrinfo *res = setAddressInfo(port, address);
+    struct addrinfo *res = setAddressInfo(address, port);
 
     int sockfd = makeSocket(res);
 
@@ -305,7 +321,7 @@ void sendFullDirectory(char * address, char * port, char ** files, int numFiles)
     //struct addrinfo *res = setAddressInfo(argv[1], argv[2]);
 
     // Get the address information for the server.
-    struct addrinfo *res = setAddressInfo(port, address);
+    struct addrinfo *res = setAddressInfo(address, port);
 
     int sockfd = makeSocket(res);
 
@@ -402,7 +418,7 @@ void buildConnection(int new_fd){
 }
 
 void sendDirectory(char* address, char * port, char ** files, int numFiles) {
-    struct addrinfo * res = setAddressInfo(port, address);
+    struct addrinfo * res = setAddressInfo(address, port);
     int sockfd = makeSocket(res);
     connectSocket(sockfd, res);
 
