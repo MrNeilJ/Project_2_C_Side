@@ -301,7 +301,7 @@ void sendingFile(char * address, char * port, char * filename){
 
 // REDO THIS SECTION LATER
 void sendFullDirectory(char * address, char * port, char ** files, int numFiles){
-    struct addrinfo *res = setAddressInfo(argv[1], argv[2]);
+    //struct addrinfo *res = setAddressInfo(argv[1], argv[2]);
 
     // Get the address information for the server.
     struct addrinfo *res = setAddressInfo(address, port);
@@ -315,8 +315,8 @@ void sendFullDirectory(char * address, char * port, char ** files, int numFiles)
         send(dataSocket, files[i], 100 ,0);                 //Send for the total number of files
     }
 
-    char* completed = "done";
-    send(dataSocket, completed, strlen(completed), 0);
+    //char* completed = "done";
+    //send(dataSocket, completed, strlen(completed), 0);
 
     close(dataSocket);
     freeaddrinfo(res);
