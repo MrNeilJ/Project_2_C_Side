@@ -38,15 +38,17 @@ def get_ip():
 
 def connect_server():
     
-    if len(sys.argv[1]) > 5:
-        serverName = sys.argv[1]
-    else:
-        serverName = sys.argv[1]+".engr.oregonstate.edu"
-        print("The server name is: {}".format(serverName))
+    #if len(sys.argv[1]) > 5:
+    #    serverName = sys.argv[1]
+    #else:
+    #    serverName = sys.argv[1]+".engr.oregonstate.edu"
+    #    print("The server name is: {}".format(serverName))
+
+    serverName = sys.argv[1]
    
-    clientSocket = socket(AF_INET,SOCK_STREAM)              
+    clientSocket = socket(AF_INET, SOCK_STREAM)
     
-    clientSocket.connect(("flip2", int(sys.argv[2])))
+    clientSocket.connect((serverName, int(sys.argv[2])))
     
     return clientSocket
 
