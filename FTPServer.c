@@ -210,7 +210,7 @@ int getDirectoryFiles(char** dirFiles) {
         }
 
     closedir(dr);
-    return 0;
+    return i;
 }
 
 char ** tempStringDirectory(int n) {
