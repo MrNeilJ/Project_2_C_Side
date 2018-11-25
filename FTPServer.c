@@ -146,7 +146,7 @@ void chatWithServer(int sockfd, char *username, char *servername) {
 }
 
 // Pulled frome lines 63-65 of Beej's Networking Example
-void bindSocket(struct addrinfo * p) {
+void bindSocket(int sockfd, struct addrinfo * p) {
     if (bind(sockfd, p->ai_addr, p->ai_addrlen) == -1) {
         fprintf(stderr, "Socket could not be properly binded, closing application.");
         exit(1);
@@ -441,7 +441,7 @@ int main(int argc, char *argv[]) {
     int sockfd = makeSocket(res);
 
     //connectSocket(sockfd, res);
-
+    bindSocket(sockfd, res);
     listenSocket(sockfd);
 
     clientConnect(sockfd);
