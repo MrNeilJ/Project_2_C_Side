@@ -456,7 +456,7 @@ int main(int argc, char *argv[]) {
     }
 
     // Get the address information for the server.
-    struct addrinfo *res = setAddressInfo(argv[1]);
+    struct addrinfo *res = setAddressInfoNoIP(argv[1]);
 
     int sockfd = makeSocket(res);
 
