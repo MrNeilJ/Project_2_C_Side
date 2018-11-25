@@ -7,8 +7,9 @@
 #   Details: Create a simple chat client        #
 #################################################
 
-from socket import *
 import socket
+from socket import *
+
 import sys
 import os
 import time
