@@ -264,7 +264,7 @@ void sendingFile(char * address, char * port, char * filename){
     while(1) {
         // Read data into buffer.  We may not have enough to fill up buffer, so we
         // store how many bytes were actually read in bytes_read.
-        int bytes_read = read(input_file, buffer, sizeof(buffer));
+        int bytes_read = read(fileDirectory, buffer, sizeof(buffer) - 1);
         if (bytes_read == 0) // We're done reading from the file
             break;
 
@@ -280,7 +280,7 @@ void sendingFile(char * address, char * port, char * filename){
         // to keep track of how many bytes are left to write.
         void *p = buffer;
         while (bytes_read > 0) {
-            int bytes_written = write(output_socket, p, bytes_read);
+            int bytes_written = write(output_socket, p, sizeof(buffer), 0);
             if (bytes_written <= 0) {
                 // handle errors
                 fprintf(stderr, "Error reading information into buffer.");
@@ -293,8 +293,8 @@ void sendingFile(char * address, char * port, char * filename){
     }
 
     memset(buffer, 0, sizeof(buffer));
-    strcpy(buffer, "__done__");
-    send(dataSocket, buffer, sizeof(buffer),0);
+    //strcpy(buffer, "__done__");
+    //send(dataSocket, buffer, sizeof(buffer),0);
 
     close(dataSocket);
     freeaddrinfo(res);
