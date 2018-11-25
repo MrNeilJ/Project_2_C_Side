@@ -311,7 +311,7 @@ void sendFullDirectory(char * address, char * port, char ** files, int numFiles)
     connectSocket(sockfd, res);
 
     int i ;
-    for (i = 0; i < totalNum; i++){
+    for (i = 0; i < numFiles; i++){
         send(dataSocket, files[i], 100 ,0);                 //Send for the total number of files
     }
 
