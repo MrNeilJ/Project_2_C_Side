@@ -6,6 +6,7 @@
 #include <sys/types.h>
 #include <netdb.h>
 #include <arpa/inet.h>
+#include <dirent.h>
 
 #define MAXDATASIZE 500
 #define MAXFILENAMELENGTH 255
