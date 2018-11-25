@@ -7,9 +7,8 @@
 #   Details: Create a simple chat client        #
 #################################################
 
-import socket
 from socket import *
-
+import socket
 import sys
 import os
 import time
@@ -34,7 +33,7 @@ def animate_connect(port_number):
 
 # Reference: https://www.geeksforgeeks.org/python-program-find-ip-address/
 def get_ip():
-    return socket.gethostbyname(socket.gethostname())
+    return gethostbyname(gethostname())
 
 
 def connect_server():
