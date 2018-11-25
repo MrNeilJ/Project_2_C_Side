@@ -296,7 +296,7 @@ void sendingFile(char * address, char * port, char * filename){
     //strcpy(buffer, "__done__");
     //send(dataSocket, buffer, sizeof(buffer),0);
 
-    close(dataSocket);
+    close(sockfd);
     freeaddrinfo(res);
 }
 
