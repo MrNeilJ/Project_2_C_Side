@@ -41,7 +41,8 @@ def connect_server():
     if len(sys.argv[1]) > 5:
         serverName = sys.argv[1]
     else:
-        serverName = sys.argv[1]+".engr.oregonstate.edu"        
+        serverName = sys.argv[1]+".engr.oregonstate.edu"
+        print("The server name is: {}".format(serverName))
    
     clientSocket = socket(AF_INET,SOCK_STREAM)              
     
