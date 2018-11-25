@@ -332,7 +332,7 @@ void buildConnection(int new_fd){
     char ipAddress[100];
 
     // Get confirmation that we are able to successfully connect to the client
-    memset(port, 0 sizeof(port));
+    memset(port, 0, sizeof(port));
     recv(new_fd, port, sizeof(port)-1, 0 );
     send(new_fd, pass, strlen(pass), 0);
 
