@@ -45,7 +45,7 @@ def connect_server():
    
     clientSocket = socket(AF_INET,SOCK_STREAM)              
     
-    clientSocket.connect((serverName, sys.argv[2]))
+    clientSocket.connect((serverName, int(sys.argv[2])))
     
     return clientSocket
 
