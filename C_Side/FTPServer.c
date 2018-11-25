@@ -346,6 +346,8 @@ void buildConnection(int new_fd){
     recv(new_fd, ipAddress, sizeof(ipAddress)-1, 0);
     send(new_fd, pass, strlen(pass), 0);
 
+    print("Client information:\nIP:%s\nPORT:%s", ipAddress, port);
+
     // Now to check all the information that we just received so we can send back all the correct information.
     if (strcmp(command, "g") == 0) {
         send(new_fd, pass, strlen(pass), 0);
@@ -445,7 +447,7 @@ int main(int argc, char *argv[]) {
     //connectSocket(sockfd, res);
     bindSocket(sockfd, res);
     listenSocket(sockfd);
-
+    printf("Server port #: %s\n", argv[1]);
     clientConnect(sockfd);
 
     //chatWithServer(sockfd, username, servername);
