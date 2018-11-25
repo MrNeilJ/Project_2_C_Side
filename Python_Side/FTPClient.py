@@ -68,13 +68,14 @@ def make_socket():
 
 def arg_check():
     if len(sys.argv) == 4 or len(sys.argv) == 5:
-        if sys.argv[3] == "-l".lower:
+        print("Argument Supplied: {}".format(sys.argv[3]))
+        if sys.argv[3] == "-l":
             if sys.argv[4] < 0 or sys.argv[4] > 65535:
                 print("Data Port Number out of viable range, try again.")
                 exit(1)
             else:
                 totalArg = 4
-        elif sys.argv[3] == "-g".lower:
+        elif sys.argv[3] == "-g":
             if sys.argv[5] < 0 or sys.argv[5] > 65535:
                 print("Data Port Number out of viable range, try again.")
                 exit(1)
