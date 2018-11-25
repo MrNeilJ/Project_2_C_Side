@@ -117,7 +117,7 @@ def get_specific_file(currentSocket):
 
 def data_fetch(clientSocket):
     portLocation = arg_check()
-    clientSocket.send(sys.argv[portLocation])
+    clientSocket.send(sys.argv[portLocation].encode())
 
     clientSocket.recv(1024)
 
