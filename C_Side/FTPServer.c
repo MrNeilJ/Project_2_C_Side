@@ -422,6 +422,7 @@ void buildConnection(int new_fd){
 
     // Now to check all the information that we just received so we can send back all the correct information.
     if (strcmp(command, "g") == 0) {
+        send(new_fd, pass, strlen(pass), 0);
 
         // Get the name of the file that we are looking for
         char filename[100];
