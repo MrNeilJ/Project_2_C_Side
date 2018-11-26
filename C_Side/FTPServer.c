@@ -207,22 +207,22 @@ void listenSocket(int sockfd) {
  *
  * Come back to this later to find the best version
  *******************************************************/
-//int getDirectory(char** files){
-//    DIR* d;
-//    struct dirent * dir;
-//    d = opendir(".");
-//    int i = 0;
-//    if (d){
-//        while ((dir = readdir(d)) != NULL){
-//            if (dir->d_type == DT_REG){
-//                strcpy(files[i], dir->d_name);
-//                i++;
-//            }
-//        }
-//        closedir(d);
-//    }
-//    return i;
-//}
+int getDirectory(char** files){
+    DIR* d;
+    struct dirent * dir;
+    d = opendir(".");
+    int i = 0;
+    if (d){
+        while ((dir = readdir(d)) != NULL){
+            if (dir->d_type == DT_REG){
+                strcpy(files[i], dir->d_name);
+                i++;
+            }
+        }
+        closedir(d);
+    }
+    return i;
+}
 /*************************************************************************************************
  * GETDIRECTORYFILES
  * Preps and sends the directory information to the client
@@ -430,7 +430,7 @@ void buildConnection(int new_fd){
 
         // Get all the current files in our directory
         char** fileSet = tempStringDirectory(500);
-        int numFile = getDirectoryFiles(fileSet);
+        int numFile = getDirectory(fileSet);
         int locateFile = fileSearch(fileSet, numFile, filename);
 
         if (locateFile) {
