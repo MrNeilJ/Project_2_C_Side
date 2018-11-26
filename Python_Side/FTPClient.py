@@ -190,7 +190,7 @@ def data_fetch(user_socket):
     # SEND OVER THE FILENAME THAT WE ARE LOOKING FOR AND SEE IF IT CAN BE LOCATED
     if sys.argv[3] == "-g":
         user_socket.send(sys.argv[4].encode())
-        user_response = user_socket.recv(1024).decode()
+        user_response = user_socket.recv(1024)
 
         print(user_response)
 
