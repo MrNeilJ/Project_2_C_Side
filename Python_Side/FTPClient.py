@@ -118,6 +118,7 @@ def get_specific_file(currentSocket):
     while dataSet:
         currFile.write(dataSet)
         dataSet = currentSocket.recv(100).decode()
+        print(dataSet)
 
     print("Completed file load...?")
 
