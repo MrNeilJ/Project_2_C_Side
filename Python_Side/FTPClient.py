@@ -61,7 +61,7 @@ def make_socket():
     serverSocket = socket(AF_INET, SOCK_STREAM)
     serverSocket.bind(('', int(serverPort)))
     serverSocket.listen(1)
-    connectionSocket, addr = serverSocket.accept()
+    connectionSocket, address = serverSocket.accept()
     return connectionSocket
 
 
@@ -81,9 +81,8 @@ def arg_check():
                 exit(1)
             else:
                 totalArg = 5
-        else:
-            print("Incorrect formatting.  Try again.")
-            exit(1)
+                print("TotalArg = 5")
+
     else:
         print("Something does not look right here with the arguments, try again")
         exit(1)
