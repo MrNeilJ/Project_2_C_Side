@@ -310,6 +310,7 @@ int fileSearch(char ** fileDir, int numFile, char* fileName) {
  *************************************************************************************************/
 void sendingFile(char * address, char * port, char * filename){
    // struct addrinfo *res = setAddressInfo(argv[1], argv[2]);
+   sleep(2);
     printf("Sending file %s, to %s", filename, address);
 
     // Get the address information for the server.
