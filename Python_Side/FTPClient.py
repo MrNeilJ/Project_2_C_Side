@@ -1,11 +1,11 @@
 #!/bin/python
 
-#################################################
-#   Name: Neil Johnson                          #
-#   Due: 10/28/18                               #
-#   Assignment: Project 1                       #
-#   Details: Create a simple chat client        #
-#################################################
+##################################################################################################
+#   Name: Neil Johnson
+#   Due: 10/28/18
+#   Assignment: Project 1
+#   Details: Create a simple chat client
+##################################################################################################
 
 from socket import *
 import sys
@@ -13,10 +13,20 @@ import os
 import time
 
 
+#################################################
+#   CLEAR TERMINAL:
+#   This will clear the terminal screen if
+#   requested
+#################################################
 def clear_terminal():
     os.system('cls' if os.name == 'nt' else 'clear')
 
 
+##################################################################################################
+#   Animate_Connect
+#   Simple function to alllow us to animated
+#   Connecting to the server (used in client)
+##################################################################################################
 def animate_connect(port_number):
     print("Trying to connect on port {}".format(port_number))
 
@@ -30,43 +40,55 @@ def animate_connect(port_number):
     time.sleep(3)
 
 
-# Reference: https://www.geeksforgeeks.org/python-program-find-ip-address/
+##################################################################################################
+#   GET_IP
+#   This gets the IP of the current client
+#   Extremely useful later in the program
+#
+#   Reference: https://www.geeksforgeeks.org/python-program-find-ip-address/
+##################################################################################################
 def get_ip():
     return gethostbyname(gethostname())
 
 
+##################################################################################################
+#   CONNECT_SERVER
+#   This is just a simple means of connecting to the server
+#   Ref: https://www.bogotobogo.com/python/python_network_programming_tcp_server_client_chat_server_chat_client_select.php
+##################################################################################################
 def connect_server():
+    print("Server: {}\nPort: {}".format(sys.argv[1], sys.argv[2]))
+    client_socket = socket(AF_INET, SOCK_STREAM)
+    client_socket.connect((sys.argv[1], int(sys.argv[2])))
     
-    if len(sys.argv[1]) > 5:
-        serverName = sys.argv[1]
-    else:
-        serverName = sys.argv[1]+".engr.oregonstate.edu"
-        print("The server name is: {}".format(serverName))
-
-    print("Server: {}\nPort: {}".format(serverName, sys.argv[2]))
-   
-    clientSocket = socket(AF_INET, SOCK_STREAM)
-    
-    clientSocket.connect(("flip2", int(sys.argv[2])))
-    
-    return clientSocket
+    return client_socket
 
 
+##################################################################################################
+#   MAKE_SOCKET
+#   The use of the function is to build the socket and prep for the connection later on
+#   This layout was heavily influenced by the
+#
+#   Ref: https://www.tutorialspoint.com/python3/python_networking.htm
+##################################################################################################
 def make_socket():
     # Get total number of arguments and validate that the formatting is correct
-    commandLoc = arg_check()
+    command_loc = arg_check()
 
-
-    
     # Mimicked this portion from the lecture files to build the connection
-    serverPort = sys.argv[commandLoc]
-    serverSocket = socket(AF_INET, SOCK_STREAM)
-    serverSocket.bind(('', int(serverPort)))
-    serverSocket.listen(1)
-    connectionSocket, addr = serverSocket.accept()
-    return connectionSocket
+    server_port = sys.argv[command_loc]
+    server_socket = socket(AF_INET, SOCK_STREAM)
+    server_socket.bind(('', int(server_port)))
+    server_socket.listen(1)
+    connection_socket, addr = server_socket.accept()
+    return connection_socket
 
 
+##################################################################################################
+#   ARG_CHECK
+#   This allows me to easily validate the application information and ensure that all the
+#   correct parameters are provided when starting the call.  Errors out if not
+##################################################################################################
 def arg_check():
     if len(sys.argv) == 5 or len(sys.argv) == 6:
         print("Argument Supplied: {}".format(sys.argv[3]))
@@ -76,13 +98,13 @@ def arg_check():
                 exit(1)
             else:
                 print("TotalArg = 4")
-                totalArg = 4
+                total_arg = 4
         elif sys.argv[3] == "-g":
             if int(sys.argv[5]) < 0 or int(sys.argv[5]) > 65535:
                 print("Data Port Number out of viable range, try again.")
                 exit(1)
             else:
-                totalArg = 5
+                total_arg = 5
                 print("TotalArg = 5")
 
     else:
@@ -98,83 +120,110 @@ def arg_check():
         exit(1)
     
     else:
-        return totalArg
+        return total_arg
 
 
-def get_current_directory(currentSocket):
-    filename = currentSocket.recv(100).decode()
+##################################################################################################
+#   GET_CURRENT_DIRECTORY
+#   Does exactly what it sounds like, it gets the current directory and keeps printing until
+#   We run out of names to print out from the current directory.
+#   Ref: https://stackoverflow.com/questions/34026077/python-recv-loop
+#   Ref: https://serverfault.com/questions/9546/filename-length-limits-on-linux
+##################################################################################################
+def get_current_directory(current_socket):
+    filename = current_socket.recv(255).decode()
 
     while filename:
         print(filename)
-        filename = currentSocket.recv(100).decode()
+        filename = current_socket.recv(255).decode()
 
 
-def get_specific_file(currentSocket):
+##################################################################################################
+#   GET_SPECIFIC_FILE
+#   Allows us to (if the file is found on the server) load the file into our current working
+#   directory.  It does so by consistently looping over and over again.
+#
+#   Ref: https://stackoverflow.com/questions/34026077/python-recv-loop
+#   Ref: https://realpython.com/python-sockets/
+##################################################################################################
+def get_specific_file(current_socket):
     print("Reached file download")
-    currFile = open(sys.argv[4], "w")
-    dataSet = currentSocket.recv(100).decode()
-    print(dataSet)
+    curr_file = open(sys.argv[4], "w")
+    data_set = current_socket.recv(1024).decode()
+    print(data_set)
 
     # https://stackoverflow.com/questions/34026077/python-recv-loop
-    while dataSet:
-        currFile.write(dataSet)
-        dataSet = currentSocket.recv(100).decode()
-        print(dataSet)
+    while data_set:
+        curr_file.write(data_set)
+        data_set = current_socket.recv(1024).decode()
+        print(data_set)
 
     print("Completed file load...?")
 
 
-def data_fetch(clientSocket):
-    portLocation = arg_check()
-    clientSocket.send(sys.argv[portLocation].encode())
+##################################################################################################
+#   DATA_FETCH
+#   This is the bread and butter of this program.
+#   It creates the essential flow to the application from beginning to end and
+#   splits the options between the -g and -l parameters properly.
+##################################################################################################
+def data_fetch(user_socket):
+    # CHECK THAT THE PORTS AND IP ADDRESS ARE VALID LOOKING
+    port_location = arg_check()
+    user_socket.send(sys.argv[port_location].encode())
+    user_socket.recv(1024)
 
-    clientSocket.recv(1024)
-
+    # CHECK THAT THE PARAMETERS PROVIDED ARE CORRECT
     if sys.argv[3] == "-g":
-        clientSocket.send("g".encode())
+        user_socket.send("g".encode())
     elif sys.argv[3] == "-l":
-        clientSocket.send("l".encode())
+        user_socket.send("l".encode())
     else:
         print("Incorrect value sent somehow")
         exit(1)
 
-    clientSocket.recv(1024)
+    user_socket.recv(1024)
 
-    clientSocket.send(get_ip().encode())
+    # SEND THE IP ADDRESS TO THE SERVER
+    user_socket.send(get_ip().encode())
+    reply = user_socket.recv(1024)
 
-    response = clientSocket.recv(1024)
-
-    if response == "fail":
+    # VALIDATE THAT THE IP ADDRESS MADE IT PROPERLY
+    if reply == "fail":
         print("Something went wrong, try again.")
         exit(1)
 
+    # SEND OVER THE FILENAME THAT WE ARE LOOKING FOR AND SEE IF IT CAN BE LOCATED
     if sys.argv[3] == "-g":
-        clientSocket.send(sys.argv[4].encode())
-        response = clientSocket.recv(1024).decode()
+        user_socket.send(sys.argv[4].encode())
+        reply = user_socket.recv(1024).decode()
 
-        print(response)
+        print(reply)
 
-        if response != "Found":
+        if reply != "Found":
             print("File does not appear to be in this directory, try again with a different file name.")
             return
 
-    currentSocket = make_socket()
+    # IF WE HAVE MADE IT THIS FAR, EVERYTHING MUST BE WORKING WELL, BUILD THE SOCKET AT THIS POINT IN TIME
+    current_socket = make_socket()
 
+    # RUN THE RESPECTIVE FUNCTIONS DEPENDING ON WHAT PARAMETERS WERE SUPPLIED EARLIER
     if sys.argv[3] == "-g":
-        get_specific_file(currentSocket)
+        get_specific_file(current_socket)
 
     if sys.argv[3] == "-l":
-        get_current_directory(currentSocket)
+        get_current_directory(current_socket)
 
-    currentSocket.close()
-
-
-
+    # ONCE DONE CLOSE THE SOCKET
+    current_socket.close()
 
 
-    
-
-
+##################################################################################################
+#   MAIN
+#   Due to pulling the majority of the information out of the main function to create a more
+#   modular feel, the effect of this would be that the main function is very bare and just
+#   hosts some very basic functions for the application
+##################################################################################################
 if __name__ == "__main__":
     clientSocket = connect_server()
     data_fetch(clientSocket)
