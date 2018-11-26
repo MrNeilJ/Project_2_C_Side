@@ -378,7 +378,7 @@ void sendFullDirectory(char * address, char * port, char ** files, int totalFile
     int i;
 
     for (i = 0; i < totalFiles; i++){
-        send(sockfd, files[i], 255 ,0);
+        send(sockfd, files[i], 100 ,0);
     }
 
     close(sockfd);
