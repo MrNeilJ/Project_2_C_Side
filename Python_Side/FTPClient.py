@@ -113,6 +113,7 @@ def get_specific_file(currentSocket):
     print("Reached file download")
     currFile = open(sys.argv[4], "w")
     dataSet = currentSocket.recv(100).decode()
+    print(dataSet)
 
     # https://stackoverflow.com/questions/34026077/python-recv-loop
     while dataSet:
