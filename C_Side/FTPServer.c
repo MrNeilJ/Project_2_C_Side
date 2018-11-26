@@ -262,7 +262,7 @@ char ** tempStringDirectory(int n) {
     char ** str_ptr = malloc(n * sizeof(char *));
     int i;
     for(i = 0; i < n; i++) {
-        str_ptr[i] = malloc(255*sizeof(char));
+        str_ptr[i] = malloc(100*sizeof(char));
         memset(str_ptr[i], 0, sizeof(str_ptr[i]));
     }
     return str_ptr;
