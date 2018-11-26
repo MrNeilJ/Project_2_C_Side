@@ -66,7 +66,7 @@ def make_socket():
 
 
 def arg_check():
-    if len(sys.argv) == 4 or len(sys.argv) == 5:
+    if len(sys.argv) == 5 or len(sys.argv) == 6:
         print("Argument Supplied: {}".format(sys.argv[3]))
         if sys.argv[3] == "-l":
             if int(sys.argv[4]) < 0 or int(sys.argv[4]) > 65535:
@@ -84,6 +84,9 @@ def arg_check():
         else:
             print("Incorrect formatting.  Try again.")
             exit(1)
+    else:
+        print("Something does not look right here with the arguments, try again")
+        exit(1)
     
     if sys.argv[1][0:-1] != "flip":
         print("Don't forget to add the server name")
