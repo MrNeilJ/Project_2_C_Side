@@ -390,7 +390,7 @@ void buildConnection(int new_fd){
             char * end = req_filename + strlen(req_filename);
             end += sprintf(end, "%s", req_filename);
 
-            sendingFile(ipAddress, port, req_filename);
+            sendingFile(ipAddress, port, filename);
 
             printf("Made it this far");
         }
