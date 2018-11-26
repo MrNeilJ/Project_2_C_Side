@@ -255,7 +255,6 @@ int fileSearch(char ** fileDir, int numFile, char* fileName) {
     for (i = 0; i < numFile; i++) {
         if (strcmp(fileDir[i], fileName) == 0) {
             found = 1;
-            break;
         }
     }
     return found;

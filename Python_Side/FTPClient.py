@@ -146,6 +146,8 @@ def data_fetch(clientSocket):
         clientSocket.send(sys.argv[4].encode())
         response = clientSocket.recv(1024).decode()
 
+        print(response)
+
         if response != "Found":
             print("File does not appear to be in this directory, try again with a different file name.")
             return
