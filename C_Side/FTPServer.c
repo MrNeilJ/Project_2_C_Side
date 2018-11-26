@@ -354,10 +354,13 @@ void sendingFile(char * address, char * port, char * filename){
             bytes_read -= bytes_written;
             p += bytes_written;
         }
+        printf("File <%s> was successfully sent.\n\n", filename);
         memset(buffer, 0, sizeof(buffer));
     }
 
     memset(buffer, 0, sizeof(buffer));
+
+
 
     close(sockfd);
     freeaddrinfo(res);
