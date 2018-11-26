@@ -57,7 +57,11 @@ def get_ip():
 #   Ref: https://www.bogotobogo.com/python/python_network_programming_tcp_server_client_chat_server_chat_client_select.php
 ##################################################################################################
 def connect_server():
-    print("Server: {}\nPort: {}\nFile: {}".format(sys.argv[1], sys.argv[2], sys.argv[4]))
+    if sys.argv[3] == "-g":
+        print("Server: {}\nPort: {}\nFile: {}".format(sys.argv[1], sys.argv[2], sys.argv[4]))
+    else:
+        print("Server: {}\nPort: {}\n".format(sys.argv[1], sys.argv[2]))
+
     client_socket = socket(AF_INET, SOCK_STREAM)
     client_socket.connect((sys.argv[1], int(sys.argv[2])))
     
