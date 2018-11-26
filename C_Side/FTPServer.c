@@ -200,29 +200,6 @@ void listenSocket(int sockfd) {
     }
 }
 
-/******************************************************
- * PRINTING OUT THE FILE NAMES
- * Found two variations of this process and will implement
- * whichever seems to best fit the need of this prorgram
- *
- * Come back to this later to find the best version
- *******************************************************/
-int getDirectory(char** files){
-    DIR* d;
-    struct dirent * dir;
-    d = opendir(".");
-    int i = 0;
-    if (d){
-        while ((dir = readdir(d)) != NULL){
-            if (dir->d_type == DT_REG){
-                strcpy(files[i], dir->d_name);
-                i++;
-            }
-        }
-        closedir(d);
-    }
-    return i;
-}
 /*************************************************************************************************
  * GETDIRECTORYFILES
  * Preps and sends the directory information to the client
