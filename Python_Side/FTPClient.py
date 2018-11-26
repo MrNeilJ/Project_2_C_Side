@@ -73,6 +73,7 @@ def arg_check():
                 print("Data Port Number out of viable range, try again.")
                 exit(1)
             else:
+                print("TotalArg = 4")
                 totalArg = 4
         elif sys.argv[3] == "-g":
             if int(sys.argv[5]) < 0 or int(sys.argv[5]) > 65535:
@@ -139,7 +140,7 @@ def data_fetch(clientSocket):
         exit(1)
 
     if sys.argv[3] == "-g":
-        clientSocket.sent(sys.argv[4])
+        clientSocket.send(sys.argv[4])
         response = clientSocket.recv(1024)
 
         if response != "Found":
