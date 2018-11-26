@@ -2,9 +2,9 @@
 
 ##################################################################################################
 #   Name: Neil Johnson
-#   Due: 10/28/18
+#   Due: 11/25/18
 #   Assignment: Project 1
-#   Details: Create a simple chat client
+#   Details: Create a simple FTP client
 ##################################################################################################
 
 from socket import *
@@ -24,7 +24,7 @@ def clear_terminal():
 
 ##################################################################################################
 #   Animate_Connect
-#   Simple function to alllow us to animated
+#   Simple function to allow us to animated
 #   Connecting to the server (used in client)
 ##################################################################################################
 def animate_connect(port_number):
