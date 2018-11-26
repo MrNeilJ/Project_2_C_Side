@@ -385,45 +385,6 @@ void sendFullDirectory(char * address, char * port, char ** files, int totalFile
     freeaddrinfo(res);
 }
 
-/*************************************************************************************************
- *  BUILDCONNECTION
- *  The bread and butter for this setup.  It allows us to easily validate all information that is
- *  being sent and received between the client and server.  It then deciphers the information
- *  provided by the client and the calls the correct functions allowing us to either send
- *  a file to the user or a list of the items in the directory.
- *
- *  Largely referenced that page as it assisted in my understanding that you need to pair each
- *  send with a proper receive and clean the memory out just in case the memory was used previously
- *  Ref: https://stackoverflow.com/questions/19794764/linux-socket-how-to-make-send-wait-for-recv
- *************************************************************************************************/
-void buildConnection(int new_fd){
-    char* pass = "pass";
-    char* fail = "fail";
-    char port[100];
-    char command[500];
-    char ipAddress[100];
-
-    // Get confirmation that we are able to successfully connect to the client
-    memset(port, 0, sizeof(port));
-    recv(new_fd, port, sizeof(port)-1, 0 );
-    send(new_fd, pass, strlen(pass), 0);
-
-    // Get the command type of what we are going to send the client (G or L)
-    memset(command, 0, sizeof(command));
-    recv(new_fd, command, sizeof(command)-1, 0);
-    send(new_fd, pass, strlen(pass), 0);
-
-    // Get the IP address from the client
-    memset(ipAddress, 0, sizeof(ipAddress));
-    recv(new_fd, ipAddress, sizeof(ipAddress)-1, 0);
-    send(new_fd, pass, strlen(pass), 0);
-
-    printf("Client information:\nIP:%s \nPORT:%s \n", ipAddress, port);
-
-    command_set(port, command, ipAddress);
-}
-
-
 void command_set(char port, char command, char ipAddress){
     // Now to check all the information that we just received so we can send back all the correct information.
     if (strcmp(command, "g") == 0) {
@@ -475,6 +436,47 @@ void command_set(char port, char command, char ipAddress){
         fprintf(stderr, "Failure, try again.");
     }
 }
+
+/*************************************************************************************************
+ *  BUILDCONNECTION
+ *  The bread and butter for this setup.  It allows us to easily validate all information that is
+ *  being sent and received between the client and server.  It then deciphers the information
+ *  provided by the client and the calls the correct functions allowing us to either send
+ *  a file to the user or a list of the items in the directory.
+ *
+ *  Largely referenced that page as it assisted in my understanding that you need to pair each
+ *  send with a proper receive and clean the memory out just in case the memory was used previously
+ *  Ref: https://stackoverflow.com/questions/19794764/linux-socket-how-to-make-send-wait-for-recv
+ *************************************************************************************************/
+void buildConnection(int new_fd){
+    char* pass = "pass";
+    char* fail = "fail";
+    char port[100];
+    char command[500];
+    char ipAddress[100];
+
+    // Get confirmation that we are able to successfully connect to the client
+    memset(port, 0, sizeof(port));
+    recv(new_fd, port, sizeof(port)-1, 0 );
+    send(new_fd, pass, strlen(pass), 0);
+
+    // Get the command type of what we are going to send the client (G or L)
+    memset(command, 0, sizeof(command));
+    recv(new_fd, command, sizeof(command)-1, 0);
+    send(new_fd, pass, strlen(pass), 0);
+
+    // Get the IP address from the client
+    memset(ipAddress, 0, sizeof(ipAddress));
+    recv(new_fd, ipAddress, sizeof(ipAddress)-1, 0);
+    send(new_fd, pass, strlen(pass), 0);
+
+    printf("Client information:\nIP:%s \nPORT:%s \n", ipAddress, port);
+
+    command_set(port, command, ipAddress);
+}
+
+
+
 /*************************************************************************************************
  *  CLIENT CONNECT
  *  Connects the client to the server.
