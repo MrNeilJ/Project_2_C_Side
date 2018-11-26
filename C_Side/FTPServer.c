@@ -424,7 +424,7 @@ void buildConnection(int new_fd){
     if (strcmp(command, "g") == 0) {
 
         // Get the name of the file that we are looking for
-        char filename[255];
+        char filename[100];
         memset(filename, 0, sizeof(filename));
         recv(new_fd, filename, sizeof(filename)-1, 0);
 
@@ -437,7 +437,7 @@ void buildConnection(int new_fd){
             char* found = "Found";
             send(new_fd, found, strlen(found), 0);
 
-            char req_filename[255];
+            char req_filename[100];
             memset(req_filename, 0, sizeof(req_filename));
             strcpy(req_filename, "./");
             char * end = req_filename + strlen(req_filename);
@@ -449,7 +449,8 @@ void buildConnection(int new_fd){
         else {
             printf("File Not Found");
             char * notFound = "File not found";
-            send(new_fd, notFound, 255, 0);
+            send(new_fd, notFound, 100, 0);
+            exit(1)
         }
 
         freeStringDirectory(fileSet, 500);
