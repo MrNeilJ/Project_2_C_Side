@@ -268,6 +268,7 @@ void sendingFile(char * address, char * port, char * filename){
     struct addrinfo *res = setAddressInfo(address, port);
 
     int sockfd = makeSocket(res);
+    connectSocket(sockfd, res);
 
     connectSocket(sockfd, res);
 

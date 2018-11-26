@@ -55,6 +55,8 @@ def connect_server():
 def make_socket():
     # Get total number of arguments and validate that the formatting is correct
     commandLoc = arg_check()
+
+
     
     # Mimicked this portion from the lecture files to build the connection
     serverPort = sys.argv[commandLoc]
