@@ -109,6 +109,7 @@ def get_current_directory(currentSocket):
 
 
 def get_specific_file(currentSocket):
+    print("Reached file download")
     currFile = open(sys.argv[4], "w")
     dataSet = currentSocket.recv(100).decode()
 
@@ -116,6 +117,8 @@ def get_specific_file(currentSocket):
     while dataSet:
         currFile.write(dataSet)
         dataSet = currentSocket.recv(100).decode()
+
+    print("Completed file load...?")
 
 
 def data_fetch(clientSocket):
