@@ -451,7 +451,7 @@ void buildConnection(int new_fd){
             printf("File Not Found");
             char * notFound = "File not found";
             send(new_fd, notFound, 100, 0);
-            exit(1)
+            exit(1);
         }
 
         freeStringDirectory(fileSet, 500);
