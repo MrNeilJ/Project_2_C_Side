@@ -80,7 +80,7 @@ int makeSocket(struct addrinfo *p) {
 void connectSocket(int sockfd, struct addrinfo *p) {
     int status;
     if ((status = connect(sockfd, p->ai_addr, p->ai_addrlen) == -1)) {
-        fprintf(stderr, "Socket could not be connected at this time, try again.");
+        fprintf(stderr, "Socket could not be connected at this time, try again. Fails Here...");
         exit(1);
     }
 }
