@@ -110,12 +110,12 @@ def get_current_directory(currentSocket):
 
 def get_specific_file(currentSocket):
     currFile = open(sys.argv[4], "w")
-    dataSet = currentSocket.recv(100)
+    dataSet = currentSocket.recv(100).decode()
 
     # https://stackoverflow.com/questions/34026077/python-recv-loop
     while dataSet:
-        currFile.write(dataSet.decode())
-        dataSet = currentSocket.recv(100)
+        currFile.write(dataSet)
+        dataSet = currentSocket.recv(100).decode()
 
 
 def data_fetch(clientSocket):
