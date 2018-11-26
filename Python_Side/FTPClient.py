@@ -61,7 +61,7 @@ def make_socket():
     serverSocket = socket(AF_INET, SOCK_STREAM)
     serverSocket.bind(('', int(serverPort)))
     serverSocket.listen(1)
-    connectionSocket, address = serverSocket.accept()
+    connectionSocket, addr = serverSocket.accept()
     return connectionSocket
 
 
