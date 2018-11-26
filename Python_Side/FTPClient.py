@@ -145,14 +145,14 @@ def get_specific_file(current_socket):
     print("Reached file download")
     curr_file = open(sys.argv[4], "w")
     data_set = current_socket.recv(1024).decode()
-    print(data_set)
+    #print(data_set)
 
     while data_set:
         curr_file.write(data_set)
         data_set = current_socket.recv(1024).decode()
         #print(data_set)
 
-    print("Download of file completed.")
+    print("Download of <{}> completed.".format(sys.argv[4]))
 
 
 ##################################################################################################
