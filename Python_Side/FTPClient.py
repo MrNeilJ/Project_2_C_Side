@@ -180,21 +180,21 @@ def data_fetch(user_socket):
 
     # SEND THE IP ADDRESS TO THE SERVER
     user_socket.send(get_ip().encode())
-    reply = user_socket.recv(1024)
+    user_response = user_socket.recv(1024)
 
     # VALIDATE THAT THE IP ADDRESS MADE IT PROPERLY
-    if reply == "fail":
+    if user_response == "fail":
         print("Something went wrong, try again.")
         exit(1)
 
     # SEND OVER THE FILENAME THAT WE ARE LOOKING FOR AND SEE IF IT CAN BE LOCATED
     if sys.argv[3] == "-g":
         user_socket.send(sys.argv[4].encode())
-        reply = user_socket.recv(1024).decode()
+        user_response = user_socket.recv(1024).decode()
 
-        print(reply)
+        print(user_response)
 
-        if reply != "Found":
+        if user_response != "Found":
             print("File does not appear to be in this directory, try again with a different file name.")
             return
 
