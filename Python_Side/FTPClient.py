@@ -130,11 +130,11 @@ def arg_check():
 #   Ref: https://serverfault.com/questions/9546/filename-length-limits-on-linux
 ##################################################################################################
 def get_current_directory(current_socket):
-    filename = current_socket.recv(255).decode()
+    filename = current_socket.recv(100).decode()
 
     while filename:
         print(filename)
-        filename = current_socket.recv(255).decode()
+        filename = current_socket.recv(100).decode()
 
 
 ##################################################################################################
