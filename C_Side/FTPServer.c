@@ -297,8 +297,14 @@ void sendingFile(char * address, char * port, char * filename){
         // track of where in the buffer we are, while we decrement bytes_read
         // to keep track of how many bytes are left to write.
         void *p = buffer;
+        int bytes_written;
         while (bytes_read > 0) {
-            int bytes_written = send(sockfd, p, sizeof(buffer), 0);
+            if (sizeof(buffer) > bytes_read) {
+                bytes_written = send(sockfd, p, bytes_read, 0);
+            }
+            else{
+                bytes_written = send(sockfd, p, sizeof(buffer), 0);
+            }
             if (bytes_written < 0) {
                 // handle errors
                 fprintf(stderr, "Error reading information into buffer.");
