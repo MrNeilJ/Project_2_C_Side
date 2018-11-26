@@ -311,7 +311,7 @@ int fileSearch(char ** fileDir, int numFile, char* fileName) {
 void sendingFile(char * address, char * port, char * filename){
    // struct addrinfo *res = setAddressInfo(argv[1], argv[2]);
     sleep(2);
-    printf("Sending file %s, to %s", filename, address);
+    printf("\nSending file %s, to %s\n", filename, address);
 
     // Get the address information for the server.
     struct addrinfo *res = setAddressInfo(address, port);
@@ -514,7 +514,7 @@ int main(int argc, char *argv[]) {
     //connectSocket(sockfd, res);
     bindSocket(sockfd, res);
     listenSocket(sockfd);
-    printf("Server port #: %s\n", argv[1]);
+    printf("Starting Server on port #: %s\n", argv[1]);
     clientConnect(sockfd);
 
     //chatWithServer(sockfd, username, servername);

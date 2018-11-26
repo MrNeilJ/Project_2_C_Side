@@ -150,9 +150,9 @@ def get_specific_file(current_socket):
     while data_set:
         curr_file.write(data_set)
         data_set = current_socket.recv(1024).decode()
-        print(data_set)
+        #print(data_set)
 
-    print("Completed file load...?")
+    print("Download of file completed.")
 
 
 ##################################################################################################
