@@ -143,8 +143,8 @@ def data_fetch(clientSocket):
         exit(1)
 
     if sys.argv[3] == "-g":
-        clientSocket.send(sys.argv[4])
-        response = clientSocket.recv(1024)
+        clientSocket.send(sys.argv[4].encode())
+        response = clientSocket.recv(1024).decode()
 
         if response != "Found":
             print("File does not appear to be in this directory, try again with a different file name.")
