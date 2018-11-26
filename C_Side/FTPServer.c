@@ -263,6 +263,7 @@ int fileSearch(char ** fileDir, int numFile, char* fileName) {
 // https://goo.gl/Q99WQM
 void sendingFile(char * address, char * port, char * filename){
    // struct addrinfo *res = setAddressInfo(argv[1], argv[2]);
+   sleep(2);
 
     // Get the address information for the server.
     struct addrinfo *res = setAddressInfo(address, port);
