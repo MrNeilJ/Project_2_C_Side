@@ -98,11 +98,11 @@ def arg_check():
 
 
 def get_current_directory(currentSocket):
-    filename = currentSocket.recv(100)
+    filename = currentSocket.recv(100).decode()
 
     while filename:
         print(filename)
-        filename = currentSocket.recv(100)
+        filename = currentSocket.recv(100).decode()
 
 
 def get_specific_file(currentSocket):
