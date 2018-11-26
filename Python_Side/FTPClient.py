@@ -91,13 +91,10 @@ def make_socket():
 ##################################################################################################
 def arg_check():
     if len(sys.argv) == 5 or len(sys.argv) == 6:
-        print("Argument Supplied: {}".format(sys.argv[3]))
         if sys.argv[3] == "-l":
             if int(sys.argv[4]) < 0 or int(sys.argv[4]) > 65535:
-                print("Data Port Number out of viable range, try again.")
                 exit(1)
             else:
-                print("TotalArg = 4")
                 total_arg = 4
         elif sys.argv[3] == "-g":
             if int(sys.argv[5]) < 0 or int(sys.argv[5]) > 65535:
@@ -105,8 +102,6 @@ def arg_check():
                 exit(1)
             else:
                 total_arg = 5
-                print("TotalArg = 5")
-
     else:
         print("Something does not look right here with the arguments, try again")
         exit(1)
@@ -152,7 +147,6 @@ def get_specific_file(current_socket):
     data_set = current_socket.recv(1024).decode()
     print(data_set)
 
-    # https://stackoverflow.com/questions/34026077/python-recv-loop
     while data_set:
         curr_file.write(data_set)
         data_set = current_socket.recv(1024).decode()

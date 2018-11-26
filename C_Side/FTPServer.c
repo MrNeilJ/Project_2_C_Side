@@ -13,7 +13,10 @@
 #define MAXFILENAMELENGTH 255
 #define BACKLOG 10 // how many pending connections queue will hold
 
-
+/*************************************************************************************************
+ *  GETUSER
+ *  Simple use for the chat client.  Allows us to get the name of the user easily
+ *************************************************************************************************/
 void getUser(char *input) {
     printf("Type in your username > ");
     scanf("%s", input);
@@ -24,6 +27,10 @@ void getUser(char *input) {
 
  Migrated the first  IF statement from Beej.us layout into a more modular layout
  */
+/************************************************************************************************
+ *  SETADDRESSINFO
+ *  This was pulled from Beej's Guide, just made more modular and separate from the main function
+ *************************************************************************************************/
 struct addrinfo *setAddressInfo(char *address, char *port) {
     struct addrinfo hints, *servinfo;
     int rv;
@@ -40,6 +47,13 @@ struct addrinfo *setAddressInfo(char *address, char *port) {
     return servinfo;
 }
 
+/*************************************************************************************************
+ * SETADDRESINFONOIP
+ * Pulled from Beej's guide as well, validated that this could be used when no IP address was
+ * supplied
+ *
+ * Ref: http://man7.org/linux/man-pages/man3/getaddrinfo.3.html
+ *************************************************************************************************/
 struct addrinfo *setAddressInfoNoIP(char *port) {
     struct addrinfo hints, *servinfo;
     int rv;
@@ -56,13 +70,11 @@ struct addrinfo *setAddressInfoNoIP(char *port) {
     return servinfo;
 }
 
-/*
- * Simplified the socket process found in Beej.us since I do not need to loop
- * through and find the compatible socket as I am hard coding that in essentially
- * using the command line when starting the application.
- *
- * Pulled that loop out and made it into a function for more modularity
- */
+/*************************************************************************************************
+ * MAKESOCKET
+ * Simplified the socket process found in Beej. Pulled from main function to make the application
+ * appear more modular.
+ *************************************************************************************************/
 int makeSocket(struct addrinfo *p) {
     int sockfd;
 
@@ -73,10 +85,11 @@ int makeSocket(struct addrinfo *p) {
     return sockfd;
 }
 
-/*
+/*************************************************************************************************
+ * CONNECTSOCKET
  * Pulled out  third if statement from the Beej.us program example and migrated that into a function
  * to help validate that the application properly connected to the socket we were trying to connect to.
- */
+ *************************************************************************************************/
 void connectSocket(int sockfd, struct addrinfo *p) {
     int status;
     if ((status = connect(sockfd, p->ai_addr, p->ai_addrlen) == -1)) {
@@ -163,7 +176,11 @@ void chatWithServer(int sockfd, char *username, char *servername) {
     printf("Closing Connection");
 }
 
-// Pulled frome lines 63-65 of Beej's Networking Example
+/*************************************************************************************************
+ * BINDSOCKET
+ * Binds the socket
+ * Pulled from lines 63-65 of Beej's Networking Example
+ *************************************************************************************************/
 void bindSocket(int sockfd, struct addrinfo * p) {
     if (bind(sockfd, p->ai_addr, p->ai_addrlen) == -1) {
         fprintf(stderr, "Socket could not be properly binded, closing application.");
@@ -171,7 +188,10 @@ void bindSocket(int sockfd, struct addrinfo * p) {
     }
 }
 
-// Pulled from lines 75-77 of Beej's Networking Example
+/*************************************************************************************************
+ * LISTENSOCKET
+ * Pulled from lines 75-77 of Beej's Networking Example
+ *************************************************************************************************/
 void listenSocket(int sockfd) {
     if (listen(sockfd, BACKLOG) == -1) {
         perror("listen");
@@ -187,29 +207,33 @@ void listenSocket(int sockfd) {
  *
  * Come back to this later to find the best version
  *******************************************************/
-int getDirectory(char** files){         //We need to get all of the files in the directory
-    DIR* d;                                 //Structure for this function was found here: https://goo.gl/oqbjTv
-    struct dirent * dir;
-    d = opendir(".");
-    int i = 0;
-    if (d){
-        while ((dir = readdir(d)) != NULL){     //While there are still things to read, read in the file names
-            if (dir->d_type == DT_REG){
-                strcpy(files[i], dir->d_name);
-                i++;
-            }
-        }
-        closedir(d);
-    }
-    return i;
-}
-
-// Personally I feel that this one is a little bit cleaner and will most likely use this one instead.
+//int getDirectory(char** files){
+//    DIR* d;
+//    struct dirent * dir;
+//    d = opendir(".");
+//    int i = 0;
+//    if (d){
+//        while ((dir = readdir(d)) != NULL){
+//            if (dir->d_type == DT_REG){
+//                strcpy(files[i], dir->d_name);
+//                i++;
+//            }
+//        }
+//        closedir(d);
+//    }
+//    return i;
+//}
+/*************************************************************************************************
+ * GETDIRECTORYFILES
+ * Preps and sends the directory information to the client
+ *
+ * Ref: https://www.geeksforgeeks.org/c-program-list-files-sub-directories-directory/
+ * Ref: http://pubs.opengroup.org/onlinepubs/7990989775/xsh/readdir.html
+ *************************************************************************************************/
 int getDirectoryFiles(char** dirFiles) {
     struct dirent *de;  // Pointer for directory entry
-
-    // opendir() returns a pointer of DIR type.
     DIR *dr = opendir(".");
+    int i = 0;
 
     if (dr == NULL)  // opendir returns NULL if couldn't open directory
     {
@@ -217,24 +241,25 @@ int getDirectoryFiles(char** dirFiles) {
         return 0;
     }
 
-    // Refer http://pubs.opengroup.org/onlinepubs/7990989775/xsh/readdir.html
-    // for readdir()
-    int i = 0;
     while ((de = readdir(dr)) != NULL)
         if (de->d_type == DT_REG){
             strcpy(dirFiles[i], de->d_name);
             i++;
         }
-
     closedir(dr);
+
     return i;
 }
 
+/*************************************************************************************************
+ *
+ *
+ */
 char ** tempStringDirectory(int n) {
     char ** array = malloc(n * sizeof(char *));
     int i;
     for(i = 0; i < n; i++) {
-        array[i] = malloc(100*sizeof(char));
+        array[i] = malloc(255*sizeof(char));
         memset(array[i], 0, sizeof(array[i]));
     }
     return array;
@@ -337,7 +362,7 @@ void sendFullDirectory(char * address, char * port, char ** files, int numFiles)
 
     int i ;
     for (i = 0; i < numFiles; i++){
-        send(sockfd, files[i], 100 ,0);                 //Send for the total number of files
+        send(sockfd, files[i], 255 ,0);                 //Send for the total number of files
     }
 
     //char* completed = "done";
@@ -377,20 +402,20 @@ void buildConnection(int new_fd){
         //send(new_fd, pass, strlen(pass), 0);
 
         // Get the name of the file that we are looking for
-        char filename[100];
+        char filename[255];
         memset(filename, 0, sizeof(filename));
         recv(new_fd, filename, sizeof(filename)-1, 0);
 
         // Get all the current files in our directory
         char** fileSet = tempStringDirectory(500);
-        int numFile = getDirectory(fileSet);
+        int numFile = getDirectoryFiles(fileSet);
         int locateFile = fileSearch(fileSet, numFile, filename);
 
         if (locateFile) {
             char* found = "Found";
             send(new_fd, found, strlen(found), 0);
 
-            char req_filename[100];
+            char req_filename[255];
             memset(req_filename, 0, sizeof(req_filename));
             strcpy(req_filename, "./");
             char * end = req_filename + strlen(req_filename);
@@ -404,7 +429,7 @@ void buildConnection(int new_fd){
         else {
             printf("File Not Found");
             char * notFound = "File not found";
-            send(new_fd, notFound, 100, 0);
+            send(new_fd, notFound, 255, 0);
         }
 
         freeStringDirectory(fileSet, 500);
@@ -436,7 +461,7 @@ void sendDirectory(char* address, char * port, char ** files, int numFiles) {
 
     int i;
     for (i = 0; i < numFiles; i++) {
-        send(sockfd, files[i], 100, 0);
+        send(sockfd, files[i], 255, 0);
     }
 
     char* completed = "done";
