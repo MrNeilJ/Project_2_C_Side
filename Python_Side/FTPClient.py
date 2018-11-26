@@ -147,16 +147,38 @@ def get_current_directory(current_socket):
 ##################################################################################################
 def get_specific_file(current_socket):
     print("Reached file download")
-    curr_file = open(sys.argv[4], "w")
-    data_set = current_socket.recv(1024).decode()
-    #print(data_set)
+    name = ""
+    try:
+        fh = open(sys.argv[4], 'r')
+        fh.close()
+        response = input("File already exists, would you like to overwrite it? (Y/N)?")
+        if response.lower() == "n":
+            print("Closing connection")
+            exit(1)
+        else:
+            curr_file = open(sys.argv[4], "w")
+            data_set = current_socket.recv(1024).decode()
+            #print(data_set)
 
-    while data_set:
-        curr_file.write(data_set)
+            while data_set:
+                curr_file.write(data_set)
+                data_set = current_socket.recv(1024).decode()
+                # print(data_set)
+
+                print("Download of <{}> completed.".format(sys.argv[4]))
+
+    # Store configuration file values
+    except FileNotFoundError:
+        curr_file = open(sys.argv[4], "w")
         data_set = current_socket.recv(1024).decode()
         #print(data_set)
 
-    print("Download of <{}> completed.".format(sys.argv[4]))
+        while data_set:
+            curr_file.write(data_set)
+            data_set = current_socket.recv(1024).decode()
+            #print(data_set)
+
+        print("Download of <{}> completed.".format(sys.argv[4]))
 
 
 ##################################################################################################
