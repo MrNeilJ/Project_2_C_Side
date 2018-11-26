@@ -389,6 +389,10 @@ void buildConnection(int new_fd){
             strcpy(req_filename, "./");
             char * end = req_filename + strlen(req_filename);
             end += sprintf(end, "%s", req_filename);
+
+            sendingFile(ipAddress, port, req_filename);
+
+            printf("Made it this far");
         }
 
         else {
