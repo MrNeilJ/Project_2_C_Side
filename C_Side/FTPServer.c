@@ -252,19 +252,27 @@ int getDirectoryFiles(char** dirFiles) {
 }
 
 /*************************************************************************************************
+ *  TEMPSTRINDIRECTORY
+ *  This is used in order to make it easy to build an array of "C-Like Strings" for our directory
+ *  function to utilize later when trying to print these out
  *
- *
- */
+ *  ref: https://stackoverflow.com/questions/8824057/pointer-to-string-array-in-c
+ *************************************************************************************************/
 char ** tempStringDirectory(int n) {
-    char ** array = malloc(n * sizeof(char *));
+    char ** str_ptr = malloc(n * sizeof(char *));
     int i;
     for(i = 0; i < n; i++) {
-        array[i] = malloc(255*sizeof(char));
-        memset(array[i], 0, sizeof(array[i]));
+        str_ptr[i] = malloc(255*sizeof(char));
+        memset(str_ptr[i], 0, sizeof(str_ptr[i]));
     }
-    return array;
+    return str_ptr;
 }
 
+/*************************************************************************************************
+ *  FREESTRINGDIRECTORY
+ *  Does the opposite of the Tempstringdirectory.  It frees all the memory allocated for the
+ *  pointer array of strings that it intially built.
+ *************************************************************************************************/
 void freeStringDirectory(char ** array, int n) {
     int i;
     for(i = 0; i < n; i++) {
@@ -273,8 +281,15 @@ void freeStringDirectory(char ** array, int n) {
     free(array);
 }
 
+/*************************************************************************************************
+ *  FILESEARCH
+ *  Does exactly what it sounds like.  It goes through the previously mentioned string set and
+ *  validates that the file in question exists in the current set of strings.
+ *
+ *  Ref: https://stackoverflow.com/questions/8004237/how-do-i-properly-compare-strings
+ *************************************************************************************************/
 int fileSearch(char ** fileDir, int numFile, char* fileName) {
-    int found = -1;
+    int found = 0;
     int i;
 
     for (i = 0; i < numFile; i++) {
@@ -285,12 +300,17 @@ int fileSearch(char ** fileDir, int numFile, char* fileName) {
     return found;
 }
 
-// https://goo.gl/Q99WQM
+
+/*************************************************************************************************
+ *  SENDINGFILE
+ *  Bridges the connection between the client and server fully, once done it sends the file
+ *  that has been requested by the client.
+ *
+ *  Ref: https://stackoverflow.com/questions/2014033/send-and-receive-a-file-in-socket-programming-in-linux-with-c-c-gcc-g
+ *************************************************************************************************/
 void sendingFile(char * address, char * port, char * filename){
    // struct addrinfo *res = setAddressInfo(argv[1], argv[2]);
-   sleep(2);
-
-   printf("Ready to send files");
+    print("Sending file %s, to %s", filename, address);
 
     // Get the address information for the server.
     struct addrinfo *res = setAddressInfo(address, port);
@@ -305,8 +325,7 @@ void sendingFile(char * address, char * port, char * filename){
     int fileDirectory = open(filename, O_RDONLY);
 
     while(1) {
-        // Read data into buffer.  We may not have enough to fill up buffer, so we
-        // store how many bytes were actually read in bytes_read.
+
         int bytes_read = read(fileDirectory, buffer, sizeof(buffer) - 1);
         if (bytes_read == 0) // We're done reading from the file
             break;
@@ -317,10 +336,6 @@ void sendingFile(char * address, char * port, char * filename){
             return;
         }
 
-        // You need a loop for the write, because not all of the data may be written
-        // in one call; write will return how many bytes were written. p keeps
-        // track of where in the buffer we are, while we decrement bytes_read
-        // to keep track of how many bytes are left to write.
         void *p = buffer;
         int bytes_written;
         while (bytes_read > 0) {
@@ -342,37 +357,45 @@ void sendingFile(char * address, char * port, char * filename){
     }
 
     memset(buffer, 0, sizeof(buffer));
-    //strcpy(buffer, "__done__");
-    //send(dataSocket, buffer, sizeof(buffer),0);
 
     close(sockfd);
     freeaddrinfo(res);
 }
 
 // REDO THIS SECTION LATER
-void sendFullDirectory(char * address, char * port, char ** files, int numFiles){
-    //struct addrinfo *res = setAddressInfo(argv[1], argv[2]);
-
-    // Get the address information for the server.
+/*************************************************************************************************
+ *  SENDFULLDIRECTORY
+ *  Bridges the connection between the client and server fully, once done it sends the file
+ *  that has been requested by the client. In this case the file is just a list of the full directory
+ *  Referenced the Beej's guide, and then just looped through a sending flurry
+ *
+ *  Ref: https://stackoverflow.com/questions/2014033/send-and-receive-a-file-in-socket-programming-in-linux-with-c-c-gcc-g
+ *************************************************************************************************/
+void sendFullDirectory(char * address, char * port, char ** files, int totalFiles){
     struct addrinfo *res = setAddressInfo(address, port);
-
     int sockfd = makeSocket(res);
-
     connectSocket(sockfd, res);
+    int i;
 
-    int i ;
-    for (i = 0; i < numFiles; i++){
-        send(sockfd, files[i], 255 ,0);                 //Send for the total number of files
+    for (i = 0; i < totalFiles; i++){
+        send(sockfd, files[i], 255 ,0);
     }
-
-    //char* completed = "done";
-    //send(dataSocket, completed, strlen(completed), 0);
 
     close(sockfd);
     freeaddrinfo(res);
 }
 
-
+/*************************************************************************************************
+ *  BUILDCONNECTION
+ *  The bread and butter for this setup.  It allows us to easily validate all information that is
+ *  being sent and received between the client and server.  It then deciphers the information
+ *  provided by the client and the calls the correct functions allowing us to either send
+ *  a file to the user or a list of the items in the directory.
+ *
+ *  Largely referenced that page as it assisted in my understanding that you need to pair each
+ *  send with a proper receive and clean the memory out just in case the memory was used previously
+ *  Ref: https://stackoverflow.com/questions/19794764/linux-socket-how-to-make-send-wait-for-recv
+ *************************************************************************************************/
 void buildConnection(int new_fd){
     char* pass = "pass";
     char* fail = "fail";
@@ -397,9 +420,13 @@ void buildConnection(int new_fd){
 
     printf("Client information:\nIP:%s \nPORT:%s \n", ipAddress, port);
 
+    command_set(port, command, ipAddress);
+}
+
+
+void command_set(char port, char command, char ipAddress){
     // Now to check all the information that we just received so we can send back all the correct information.
     if (strcmp(command, "g") == 0) {
-        //send(new_fd, pass, strlen(pass), 0);
 
         // Get the name of the file that we are looking for
         char filename[255];
@@ -422,8 +449,6 @@ void buildConnection(int new_fd){
             end += sprintf(end, "%s", req_filename);
 
             sendingFile(ipAddress, port, filename);
-
-            printf("Made it this far");
         }
 
         else {
@@ -444,30 +469,17 @@ void buildConnection(int new_fd){
         sendFullDirectory(ipAddress, port, files, numFile);
 
         freeStringDirectory(files, 500);
-
     }
-
     else {
         send(new_fd, fail, strlen(fail), 0);
         fprintf(stderr, "Failure, try again.");
     }
-
 }
-
-void sendDirectory(char* address, char * port, char ** files, int numFiles) {
-    struct addrinfo * res = setAddressInfo(address, port);
-    int sockfd = makeSocket(res);
-    connectSocket(sockfd, res);
-
-    int i;
-    for (i = 0; i < numFiles; i++) {
-        send(sockfd, files[i], 255, 0);
-    }
-
-    char* completed = "done";
-    send(sockfd, completed, strlen(completed), 0);
-}
-
+/*************************************************************************************************
+ *  CLIENT CONNECT
+ *  Connects the client to the server.
+ *  Referenced Beej's Guide for this section.
+ *************************************************************************************************/
 void clientConnect(int sockfd) {
     struct sockaddr_storage their_addr; // connector's address information
     socklen_t sin_size;
@@ -485,7 +497,10 @@ void clientConnect(int sockfd) {
     }
 
 }
-
+/*************************************************************************************************
+ *  MAIN
+ *  Pulled from the Beej's Guide, just sets the application up for the best possible service
+ *************************************************************************************************/
 int main(int argc, char *argv[]) {
     // Validate that we have the correct number of arguments before proceeding with the rest of the setup
     if (argc != 2) {
