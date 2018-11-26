@@ -265,11 +265,12 @@ void sendingFile(char * address, char * port, char * filename){
    // struct addrinfo *res = setAddressInfo(argv[1], argv[2]);
    sleep(2);
 
+   printf("Ready to send files");
+
     // Get the address information for the server.
     struct addrinfo *res = setAddressInfo(address, port);
 
     int sockfd = makeSocket(res);
-    connectSocket(sockfd, res);
 
     connectSocket(sockfd, res);
 
